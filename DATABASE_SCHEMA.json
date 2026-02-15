@@ -1,0 +1,886 @@
+{
+  "database": {
+    "name": "ecommerce",
+    "engine": "InnoDB",
+    "charset": "utf8mb4",
+    "collation": "utf8mb4_unicode_ci",
+    "created_date": "2026-02-03",
+    "description": "E-Commerce Portal Database Schema",
+    "tables": [
+      {
+        "name": "users",
+        "description": "Customer/User account information",
+        "primary_key": "user_id",
+        "columns": [
+          {
+            "name": "user_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "auto_increment": true,
+            "comment": "Primary Key"
+          },
+          {
+            "name": "phone",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "unique": true,
+            "comment": "Phone number"
+          },
+          {
+            "name": "is_login",
+            "type": "BOOLEAN",
+            "nullable": false,
+            "default": false,
+            "comment": "Login status"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "nullable": true,
+            "comment": "Record creation timestamp"
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "nullable": true,
+            "comment": "Last update timestamp"
+          }
+        ],
+        "relationships": {
+          "orders": "user_id",
+          "billing": "user_id",
+          "carts": "user_id",
+          "sessions": "user_id"
+        }
+      },
+      {
+        "name": "venders",
+        "description": "Vendor/Seller account information",
+        "primary_key": "id",
+        "alternate_key": "v_id",
+        "columns": [
+          {
+            "name": "id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "auto_increment": true,
+            "comment": "Vendor ID (v_id)"
+          },
+          {
+            "name": "fullname",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "phone",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "password",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Encrypted password"
+          },
+          {
+            "name": "address",
+            "type": "TEXT",
+            "nullable": false
+          },
+          {
+            "name": "id_number",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Government ID"
+          },
+          {
+            "name": "business_name",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "business_type",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "gst_number",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "GST number"
+          },
+          {
+            "name": "business_category",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "bank_account_no",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "payment_methord",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Payment method (note: typo in original)"
+          },
+          {
+            "name": "image",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Profile/business image"
+          },
+          {
+            "name": "status",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "default": "unverifide",
+            "comment": "Verification status"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          }
+        ],
+        "relationships": {
+          "products": "v_id"
+        }
+      },
+      {
+        "name": "categories",
+        "description": "Product categories",
+        "primary_key": "id",
+        "alternate_key": "c_id",
+        "columns": [
+          {
+            "name": "id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "auto_increment": true,
+            "comment": "Category ID (c_id)"
+          },
+          {
+            "name": "c_name",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Category name"
+          },
+          {
+            "name": "c_commision",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Commission percentage"
+          },
+          {
+            "name": "p_c_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": true,
+            "comment": "Parent category ID (for subcategories)"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          }
+        ],
+        "relationships": {
+          "products": "c_id",
+          "categories_self": "p_c_id"
+        }
+      },
+      {
+        "name": "products",
+        "description": "Product listings",
+        "primary_key": "p_id",
+        "columns": [
+          {
+            "name": "p_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "auto_increment": true,
+            "comment": "Product ID"
+          },
+          {
+            "name": "v_id",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Vendor ID (Foreign Key)"
+          },
+          {
+            "name": "p_name",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Product name"
+          },
+          {
+            "name": "p_price",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Product price (should be DECIMAL)"
+          },
+          {
+            "name": "c_id",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Category ID (Foreign Key)"
+          },
+          {
+            "name": "p_stock",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Stock quantity (should be INT)"
+          },
+          {
+            "name": "p_description",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Product description"
+          },
+          {
+            "name": "p_image",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Product image path"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          "v_id",
+          "c_id"
+        ],
+        "relationships": {
+          "venders": "v_id",
+          "categories": "c_id",
+          "order_items": "p_id",
+          "carts": "p_id"
+        }
+      },
+      {
+        "name": "banners",
+        "description": "Promotional banners",
+        "primary_key": "b_id",
+        "columns": [
+          {
+            "name": "b_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "auto_increment": true,
+            "comment": "Banner ID"
+          },
+          {
+            "name": "b_image",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Banner image path"
+          },
+          {
+            "name": "b_alt",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Alt text"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          }
+        ]
+      },
+      {
+        "name": "carts",
+        "description": "Shopping cart items",
+        "primary_key": "cart_id",
+        "columns": [
+          {
+            "name": "cart_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "auto_increment": true,
+            "comment": "Cart item ID"
+          },
+          {
+            "name": "user_id",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "User ID (Foreign Key)"
+          },
+          {
+            "name": "p_id",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Product ID (Foreign Key)"
+          },
+          {
+            "name": "p_qty",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Product quantity"
+          },
+          {
+            "name": "p_name",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Product name (denormalized)"
+          },
+          {
+            "name": "p_price",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Product price (denormalized)"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          "user_id",
+          "p_id"
+        ],
+        "relationships": {
+          "users": "user_id",
+          "products": "p_id"
+        }
+      },
+      {
+        "name": "billing",
+        "description": "Billing/shipping addresses",
+        "primary_key": "bill_id",
+        "columns": [
+          {
+            "name": "bill_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "auto_increment": true
+          },
+          {
+            "name": "user_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "comment": "User ID (Foreign Key)"
+          },
+          {
+            "name": "country",
+            "type": "VARCHAR(255)",
+            "nullable": true
+          },
+          {
+            "name": "fullname",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "pincode",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Postal code"
+          },
+          {
+            "name": "landmark",
+            "type": "VARCHAR(255)",
+            "nullable": true
+          },
+          {
+            "name": "city",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "state",
+            "type": "VARCHAR(255)",
+            "nullable": true
+          },
+          {
+            "name": "address",
+            "type": "TEXT",
+            "nullable": false,
+            "comment": "Complete address"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          "user_id"
+        ],
+        "relationships": {
+          "users": "user_id"
+        }
+      },
+      {
+        "name": "orders",
+        "description": "Customer orders",
+        "primary_key": "order_id",
+        "columns": [
+          {
+            "name": "order_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "auto_increment": true
+          },
+          {
+            "name": "user_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "comment": "User ID (Foreign Key)"
+          },
+          {
+            "name": "order_no",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "unique": true,
+            "comment": "Unique order number"
+          },
+          {
+            "name": "status",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "default": "pending",
+            "comment": "Order status"
+          },
+          {
+            "name": "payment_mode",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "comment": "Payment method"
+          },
+          {
+            "name": "total",
+            "type": "DECIMAL(10,2)",
+            "nullable": false,
+            "default": "0.00",
+            "comment": "Total amount"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          "user_id",
+          "status"
+        ],
+        "relationships": {
+          "users": "user_id",
+          "order_items": "order_id"
+        }
+      },
+      {
+        "name": "order_items",
+        "description": "Individual items in orders",
+        "primary_key": "order_item_id",
+        "columns": [
+          {
+            "name": "order_item_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "auto_increment": true
+          },
+          {
+            "name": "order_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "comment": "Order ID (Foreign Key)"
+          },
+          {
+            "name": "p_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "comment": "Product ID (Foreign Key)"
+          },
+          {
+            "name": "image",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "comment": "Product image"
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Product name"
+          },
+          {
+            "name": "price",
+            "type": "DECIMAL(10,2)",
+            "nullable": false,
+            "comment": "Unit price"
+          },
+          {
+            "name": "qty",
+            "type": "INT",
+            "nullable": false,
+            "comment": "Quantity"
+          },
+          {
+            "name": "total",
+            "type": "DECIMAL(10,2)",
+            "nullable": false,
+            "comment": "Line total"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          "order_id",
+          "p_id"
+        ],
+        "relationships": {
+          "orders": "order_id",
+          "products": "p_id"
+        }
+      },
+      {
+        "name": "sessions",
+        "description": "User session storage",
+        "primary_key": "id",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "comment": "Session ID"
+          },
+          {
+            "name": "user_id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": true
+          },
+          {
+            "name": "ip_address",
+            "type": "VARCHAR(45)",
+            "nullable": true,
+            "comment": "Client IP address"
+          },
+          {
+            "name": "user_agent",
+            "type": "TEXT",
+            "nullable": true,
+            "comment": "Browser user agent"
+          },
+          {
+            "name": "payload",
+            "type": "LONGTEXT",
+            "nullable": false,
+            "comment": "Serialized session data"
+          },
+          {
+            "name": "last_activity",
+            "type": "INT",
+            "nullable": false,
+            "comment": "Last activity timestamp"
+          }
+        ],
+        "indexes": [
+          "user_id",
+          "last_activity"
+        ]
+      },
+      {
+        "name": "password_reset_tokens",
+        "description": "Password reset tokens",
+        "primary_key": "email",
+        "columns": [
+          {
+            "name": "email",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "token",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "nullable": true
+          }
+        ]
+      },
+      {
+        "name": "cache",
+        "description": "Application cache storage",
+        "primary_key": "key",
+        "columns": [
+          {
+            "name": "key",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "value",
+            "type": "MEDIUMTEXT",
+            "nullable": false
+          },
+          {
+            "name": "expiration",
+            "type": "INT",
+            "nullable": false,
+            "comment": "Expiration timestamp"
+          }
+        ]
+      },
+      {
+        "name": "cache_locks",
+        "description": "Cache locks for synchronization",
+        "primary_key": "key",
+        "columns": [
+          {
+            "name": "key",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "owner",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "expiration",
+            "type": "INT",
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "jobs",
+        "description": "Job queue storage",
+        "primary_key": "id",
+        "columns": [
+          {
+            "name": "id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "auto_increment": true
+          },
+          {
+            "name": "queue",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "payload",
+            "type": "LONGTEXT",
+            "nullable": false
+          },
+          {
+            "name": "attempts",
+            "type": "TINYINT UNSIGNED",
+            "nullable": false
+          },
+          {
+            "name": "reserved_at",
+            "type": "INT UNSIGNED",
+            "nullable": true
+          },
+          {
+            "name": "available_at",
+            "type": "INT UNSIGNED",
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "INT UNSIGNED",
+            "nullable": false
+          }
+        ],
+        "indexes": [
+          "queue"
+        ]
+      },
+      {
+        "name": "job_batches",
+        "description": "Job batch tracking",
+        "primary_key": "id",
+        "columns": [
+          {
+            "name": "id",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "total_jobs",
+            "type": "INT",
+            "nullable": false
+          },
+          {
+            "name": "pending_jobs",
+            "type": "INT",
+            "nullable": false
+          },
+          {
+            "name": "failed_jobs",
+            "type": "INT",
+            "nullable": false
+          },
+          {
+            "name": "failed_job_ids",
+            "type": "LONGTEXT",
+            "nullable": false
+          },
+          {
+            "name": "options",
+            "type": "MEDIUMTEXT",
+            "nullable": true
+          },
+          {
+            "name": "cancelled_at",
+            "type": "INT",
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "INT",
+            "nullable": false
+          },
+          {
+            "name": "finished_at",
+            "type": "INT",
+            "nullable": true
+          }
+        ]
+      },
+      {
+        "name": "failed_jobs",
+        "description": "Failed job tracking",
+        "primary_key": "id",
+        "columns": [
+          {
+            "name": "id",
+            "type": "BIGINT UNSIGNED",
+            "nullable": false,
+            "auto_increment": true
+          },
+          {
+            "name": "connection",
+            "type": "TEXT",
+            "nullable": false
+          },
+          {
+            "name": "queue",
+            "type": "TEXT",
+            "nullable": false
+          },
+          {
+            "name": "payload",
+            "type": "LONGTEXT",
+            "nullable": false
+          },
+          {
+            "name": "exception",
+            "type": "LONGTEXT",
+            "nullable": false
+          },
+          {
+            "name": "failed_at",
+            "type": "TIMESTAMP",
+            "nullable": false,
+            "default": "CURRENT_TIMESTAMP"
+          }
+        ]
+      },
+      {
+        "name": "migrations",
+        "description": "Migration history tracking",
+        "primary_key": "id",
+        "columns": [
+          {
+            "name": "id",
+            "type": "INT UNSIGNED",
+            "nullable": false,
+            "auto_increment": true
+          },
+          {
+            "name": "migration",
+            "type": "VARCHAR(255)",
+            "nullable": false
+          },
+          {
+            "name": "batch",
+            "type": "INT",
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "total_tables": 17,
+      "has_primary_keys": true,
+      "has_foreign_keys": true,
+      "foreign_key_count": 7,
+      "total_columns": 180,
+      "uses_timestamps": true,
+      "charset": "utf8mb4_unicode_ci",
+      "engine": "InnoDB"
+    }
+  }
+}
